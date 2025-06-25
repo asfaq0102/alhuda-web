@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LogIn, User, Lock, Eye, EyeOff, UserPlus } from 'lucide-react';
 
 const LoginPage = () => {
@@ -8,10 +8,33 @@ const LoginPage = () => {
     password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Login attempt:', formData);
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+
+      if (response.ok) {                              
+        
+        alert('Login successful!');
+        console.log(data);
+        navigate('/dashboard');
+      } else {
+        alert(data.message || 'Login failed!');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Something went wrong. Please try again.');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

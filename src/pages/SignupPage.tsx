@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserPlus, User, Lock, Eye, EyeOff } from 'lucide-react';
 
 const SignupPage = () => {
@@ -10,14 +10,40 @@ const SignupPage = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords don't match!");
       return;
     }
-    console.log('Signup attempt:', formData);
+    
+    try {
+      const response = await fetch('http://localhost:5000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Account created successfully!');
+        console.log(data);
+        navigate('/login');
+      } else {
+        alert(data.message || 'Signup failed!');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      alert('Something went wrong. Please try again.');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

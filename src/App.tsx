@@ -18,6 +18,7 @@ import Gallery from "./pages/Gallery";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
